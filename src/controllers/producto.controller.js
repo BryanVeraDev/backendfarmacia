@@ -45,12 +45,32 @@ export const getProductoName = async (req, res) => {
 
 export const createProducto = async (req, res) => {
   try {
-    const { nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria } = req.body;
-    const [rows] = await pool.query(
-      "INSERT INTO producto (nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria) VALUES (?, ?, ?, ?, ?, ?)",
-      [nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria]
-    );
-    res.status(201).json({ id_producto: rows.insertId, nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria });
+    const { nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive } = req.body;
+
+    const [rows2] = await pool.query("SELECT * FROM producto p join categoria c on c.id_categoria = p.categoria WHERE nombre = ?", [
+      nombre,
+    ]);
+
+    console.log(rows2.length)
+    
+    if (rows2.length <= 0) {
+      const [rows] = await pool.query(
+        "INSERT INTO producto (nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        [nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive]
+      );
+      res.status(201).json({ id_producto: rows.insertId, nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive });
+
+    }
+    else{
+      
+      await pool.query("UPDATE producto SET cantidad = ? WHERE nombre = ?", [
+        new_value,
+        nombre,
+      ]);
+
+      res.status(201).json({ id_producto: rows2.insertId, nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive });
+      
+    }
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
