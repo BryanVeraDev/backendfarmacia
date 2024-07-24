@@ -14,6 +14,18 @@ export const createCompra_productos = async (req, res) => {
   }
 };
 
+export const getCompra_productos = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await pool.query("SELECT cp.id_compra_producto , p.id_producto, p.nombre, cp.cantidad_producto, p.precio_unitario from compra_producto cp JOIN producto p on p.id_producto = cp.id_producto JOIN compra c on c.id_compra = cp.id_compra WHERE c.id_compra = ? ORDER BY 1 ASC",
+      [id]
+    );
+    res.json(rows);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
 
 
 

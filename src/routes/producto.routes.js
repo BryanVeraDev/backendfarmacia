@@ -2,10 +2,11 @@ import { Router } from "express";
 
 import {
     createProducto,
-    deleteProducto,
-    getProducto,
+    getProductoId,
+    getProductoName,
     getProductos,
-    updateProducto,
+    updateProductoPrecio,
+    updateProductoIsActive,
   } from "../controllers/producto.controller.js";
 
   import { verifyToken, isAdmin } from "../middlewares/authJwt.js";
@@ -14,10 +15,11 @@ import {
 const router = Router()
 
 router.get('/products', [ verifyToken, isAdmin ], getProductos)
-router.get("/products/:id", verifyToken , getProducto);
+router.get("/products/:id", verifyToken , getProductoId);
+router.get("/products/search/:name", getProductoName);
 router.post('/products', createProducto)
-router.put('/products', updateProducto)
-router.delete('/products', deleteProducto)
+router.put('/products/price/:id', updateProductoPrecio)
+router.put('/products/isactive/:id', updateProductoIsActive)
 
 
 

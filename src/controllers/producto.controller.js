@@ -9,7 +9,7 @@ export const getProductos = async (req, res) => {
   }
 };
 
-export const getProducto = async (req, res) => {
+export const getProductoId = async (req, res) => {
   try {
     const { id } = req.params;
     const [rows] = await pool.query("SELECT * FROM producto p join categoria c on c.id_categoria = p.categoria WHERE id_producto = ?", [
@@ -26,16 +26,18 @@ export const getProducto = async (req, res) => {
   }
 };
 
-export const deleteProducto = async (req, res) => {
+export const getProductoName = async (req, res) => {
   try {
-    const { id } = req.params;
-    const [rows] = await pool.query("DELETE FROM producto WHERE id_producto = ?", [id]);
+    const { name } = req.params;
+    const [rows] = await pool.query("SELECT * FROM producto p join categoria c on c.id_categoria = p.categoria WHERE nombre = ?", [
+      name,
+    ]);
 
-    if (rows.affectedRows <= 0) {
+    if (rows.length <= 0) {
       return res.status(404).json({ message: "producto not found" });
     }
 
-    res.sendStatus(204);
+    res.json(rows[0]);
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
@@ -54,7 +56,7 @@ export const createProducto = async (req, res) => {
   }
 };
 
-export const updateProducto = async (req, res) => {
+export const updateProductoPrecio = async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria } = req.body;
@@ -67,7 +69,33 @@ export const updateProducto = async (req, res) => {
     if (result.affectedRows === 0)
       return res.status(404).json({ message: "producto not found" });
 
-    const [rows] = await pool.query("SELECT * FROM producto WHERE id = ?", [
+    const [rows] = await pool.query("SELECT * FROM producto WHERE id_producto = ?", [
+      id,
+    ]);
+
+    res.json(rows[0]);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
+export const updateProductoIsActive = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { isActive } = req.body;
+
+    console.log(id)
+    console.log(isActive)
+
+    const [result] = await pool.query(
+      "UPDATE producto SET isActive = IFNULL(?, isActive) WHERE id_producto = ?",
+      [isActive, id]
+    );
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ message: "producto not found" });
+
+    const [rows] = await pool.query("SELECT * FROM producto WHERE id_producto = ?", [
       id,
     ]);
 

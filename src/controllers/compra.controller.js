@@ -1,6 +1,6 @@
 import { pool } from "../db.js";
 
-export const getCompra = async (req, res) => {
+export const getCompras = async (req, res) => {
     try {
       const [rows] = await pool.query("SELECT * FROM compra c");
       res.json(rows);
