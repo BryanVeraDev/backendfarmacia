@@ -6,7 +6,7 @@ import indexRoutes from './routes/index.routes.js'
 import compraRoutes from './routes/compra.routes.js'
 import compra_productoRoutes from './routes/compra_producto.routes.js'
 import proveedorRoutes from './routes/proveedor.routes.js'
-import producto_proveedorRoutes from './routes/producto_proveedor.routes.js'
+
 
 
 const app = express()
@@ -22,7 +22,7 @@ app.use("/api",authRoutes)
 app.use("/api",compraRoutes)
 app.use("/api",compra_productoRoutes)
 app.use("/api",proveedorRoutes)
-app.use("/api",producto_proveedorRoutes)
+
 
 app.use((req, res, next) => {
     res.status(404).json({

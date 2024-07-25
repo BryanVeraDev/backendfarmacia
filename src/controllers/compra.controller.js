@@ -45,6 +45,11 @@ export const createCompra = async (req, res) => {
         "INSERT INTO compra_producto (id_compra, id_producto, cantidad_producto) VALUES (?, ?, ?)",
         [id_compra, id_producto, cantidad_producto]
       );
+
+      await pool.query(
+        "UPDATE producto SET cantidad = cantidad - ? WHERE id_producto = ?",
+        [cantidad_producto, id_producto]
+      );
     }
 
     const [totalRows] = await pool.query(
@@ -56,7 +61,6 @@ export const createCompra = async (req, res) => {
     );
 
     const newTotal = totalRows[0].total;
-
     await pool.query("UPDATE compra SET total = ? WHERE id_compra = ?", [
       newTotal,
       id_compra,
@@ -67,6 +71,20 @@ export const createCompra = async (req, res) => {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
+
+export const getComprasFilter = async (req, res) => {
+  try {
+    const { fecha_inicio, fecha_fin } = req.body
+    const [rows] = await pool.query("SELECT * FROM compra WHERE fecha BETWEEN ? AND ?", [
+      fecha_inicio, fecha_fin
+    ]);
+
+    res.json(rows);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
 
 export const deleteCompra = async (req, res) => {
   try {
@@ -80,6 +98,19 @@ export const deleteCompra = async (req, res) => {
     }
 
     res.sendStatus(204);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
+export const getComprasCount = async (req, res) => {
+  try {
+    const { fecha } = req.body
+    const [rows] = await pool.query("SELECT count(*) as cantidad FROM compra WHERE fecha = ?", [
+      fecha
+    ]);
+
+    res.json(rows);
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }

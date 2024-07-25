@@ -43,6 +43,42 @@ export const getProductoName = async (req, res) => {
   }
 };
 
+export const getProductosCount = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT count(id_producto) as cantidad FROM producto p where isActive = 1");
+    res.json(rows);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
+export const getProductosAsc = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM producto p JOIN categoria c on c.id_categoria = p.categoria WHERE p.isActive = 1 ORDER BY p.cantidad ASC");
+    res.json(rows);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
+export const getProductosDesc = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM producto p JOIN categoria c on c.id_categoria = p.categoria WHERE p.isActive = 1 ORDER BY p.cantidad DESC");
+    res.json(rows);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
+export const getProductosCategory = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT c.descripcion as name_categoria, count(p.id_producto) as cantidad FROM categoria c JOIN producto p on p.categoria = c.id_categoria GROUP BY 1");
+    res.json(rows);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
 export const createProducto = async (req, res) => {
   try {
     const { nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive } = req.body;
@@ -124,3 +160,4 @@ export const updateProductoIsActive = async (req, res) => {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
+
