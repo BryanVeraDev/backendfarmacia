@@ -143,11 +143,11 @@ export const createProducto = async (req, res) => {
 export const updateProductoPrecio = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria } = req.body;
+    const { precio_unitario } = req.body;
 
     const [result] = await pool.query(
       "UPDATE producto SET precio_unitario = IFNULL(?, precio_unitario) WHERE id_producto = ?",
-      [nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, id]
+      [precio_unitario, id]
     );
 
     if (result.affectedRows === 0)
