@@ -1,9 +1,31 @@
 import { pool } from "../db.js";
 
+export const transformarProductos = (rows) => {
+  return rows.map(row => ({
+    id_producto: row.id_producto,
+    nombre: row.producto_nombre,
+    precio: row.precio_unitario,
+    cantidad: row.cantidad,
+    isActive: row.producto_activo,
+    categoria: {
+      id_categoria: row.id_categoria,
+      descripcion: row.categoria_nombre,
+      isActive: row.categoria_activo
+    },
+    proveedor: {
+      id_proveedor: row.id_proveedor,
+      nombre: row.proveedor_nombre,
+      telefono: row.proveedor_telefono,
+      isActive: row.proveedor_activo
+    }
+  }));
+};
+
 export const getProductos = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM producto p join categoria c on c.id_categoria = p.categoria");
-    res.json(rows);
+    const [rows] = await pool.query("SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1;");
+    const productos = transformarProductos(rows)
+    res.json(productos)
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
@@ -12,7 +34,7 @@ export const getProductos = async (req, res) => {
 export const getProductoId = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.query("SELECT * FROM producto p join categoria c on c.id_categoria = p.categoria WHERE id_producto = ?", [
+    const [rows] = await pool.query("SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.id_producto = ?", [
       id,
     ]);
 
@@ -20,7 +42,9 @@ export const getProductoId = async (req, res) => {
       return res.status(404).json({ message: "producto not found" });
     }
 
-    res.json(rows[0]);
+    const productos = transformarProductos(rows)
+    res.json(productos[0])
+
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
@@ -29,7 +53,7 @@ export const getProductoId = async (req, res) => {
 export const getProductoName = async (req, res) => {
   try {
     const { name } = req.params;
-    const [rows] = await pool.query("SELECT * FROM producto p join categoria c on c.id_categoria = p.categoria WHERE nombre = ?", [
+    const [rows] = await pool.query("SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.nombre = ?", [
       name,
     ]);
 
@@ -37,7 +61,8 @@ export const getProductoName = async (req, res) => {
       return res.status(404).json({ message: "producto not found" });
     }
 
-    res.json(rows[0]);
+    const productos = transformarProductos(rows)
+    res.json(productos[0])
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
@@ -54,8 +79,9 @@ export const getProductosCount = async (req, res) => {
 
 export const getProductosAsc = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM producto p JOIN categoria c on c.id_categoria = p.categoria WHERE p.isActive = 1 ORDER BY p.cantidad ASC");
-    res.json(rows);
+    const [rows] = await pool.query("SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1 ORDER BY p.cantidad ASC");
+    const productos = transformarProductos(rows)
+    res.json(productos)
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
@@ -63,8 +89,10 @@ export const getProductosAsc = async (req, res) => {
 
 export const getProductosDesc = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM producto p JOIN categoria c on c.id_categoria = p.categoria WHERE p.isActive = 1 ORDER BY p.cantidad DESC");
-    res.json(rows);
+    const [rows] = await pool.query("SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1 ORDER BY p.cantidad DESC");
+    
+    const productos = transformarProductos(rows)
+    res.json(productos)
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
@@ -73,7 +101,7 @@ export const getProductosDesc = async (req, res) => {
 export const getProductosCategory = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT c.descripcion as name_categoria, count(p.id_producto) as cantidad FROM categoria c JOIN producto p on p.categoria = c.id_categoria GROUP BY 1");
-    res.json(rows);
+    res.json(rows)
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }

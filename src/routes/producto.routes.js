@@ -19,8 +19,8 @@ import {
 const router = Router()
 
 
-router.get('/products', [ verifyToken, isAdmin ], getProductos)
-router.get("/products/product/:id", verifyToken , getProductoId);
+router.get('/products', getProductos)
+router.get("/products/product/:id", getProductoId);
 router.get("/products/count", getProductosCount);
 router.get("/products/categories", getProductosCategory);
 router.get("/products/asc", getProductosAsc);
