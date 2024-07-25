@@ -34,10 +34,7 @@ export const createCategoria = async (req, res) => {
     const [rows] = await pool.query(
       "INSERT INTO categoria (descripcion, isActive) VALUES (?, 1)",
       [descripcion]
-    );
-
-    console.log(rows)    
-
+    );   
     res.status(201).json({ id_categoria: rows.insertId, descripcion, isActive: 1});
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });

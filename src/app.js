@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import productosRoutes from './routes/producto.routes.js'
 import categoriasRoutes from './routes/categoria.routes.js'
 import authRoutes from './routes/auth.routes.js'
@@ -12,6 +13,9 @@ import proveedorRoutes from './routes/proveedor.routes.js'
 const app = express()
 
 // Middlewares
+app.use(cors({
+    origin: 'http://localhost:5173'
+  }));
 app.use(express.json())
 
 // Routes
