@@ -4,7 +4,7 @@ export const transformarProductos = (rows) => {
   return rows.map(row => ({
     id_producto: row.id_producto,
     nombre: row.producto_nombre,
-    precio: row.precio_unitario,
+    precio_unitario: row.precio_unitario,
     cantidad: row.cantidad,
     isActive: row.producto_activo,
     categoria: {
