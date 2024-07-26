@@ -1,5 +1,5 @@
 import { Router } from "express";
-
+import { verifyToken, isAdmin } from "../middlewares/authJwt.js";
 import {
     createCategoria,
     getCategoria,
@@ -13,7 +13,7 @@ const router = Router()
 
 router.get('/categories', getCategorias)
 router.get("/categories/:descripcion", getCategoria);
-router.post('/categories', createCategoria)
+router.post('/categories',verifyToken, createCategoria)
 router.put('/categories/:id', updateCategoria)
 
 

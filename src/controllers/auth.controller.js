@@ -43,6 +43,8 @@ export const signIn = async (req, res) => {
     const token = jwt.sign({ id: user.id_usuario }, SECRET, {
         expiresIn: 86400, // 24 hours
       });
+
+      res.setHeader('x-access-token',token)
   
       res.json({ token });
     
