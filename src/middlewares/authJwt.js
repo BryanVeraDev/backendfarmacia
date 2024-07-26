@@ -39,7 +39,7 @@ export const isAdmin = async (req, res, next) => {
       return res.status(404).json({ message: "No user found" });
 
     req.user = rows[0];
-    const allowedUsernames = "admin"; // Define qué nombres de usuario tienen permiso
+    const allowedUsernames = "Administrador"; // Define qué nombres de usuario tienen permiso
 
     if (allowedUsernames == req.user.nombre) {
     next()
