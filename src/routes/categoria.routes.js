@@ -13,7 +13,7 @@ const router = Router()
 
 router.get('/categories', getCategorias)
 router.get("/categories/:descripcion", getCategoria);
-router.post('/categories',verifyToken, createCategoria)
+router.post('/categories', createCategoria)
 router.put('/categories/:id', updateCategoria)
 
 
