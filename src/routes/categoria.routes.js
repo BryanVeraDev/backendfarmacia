@@ -5,6 +5,7 @@ import {
     getCategoria,
     getCategorias,
     updateCategoria,
+    updateCategoriaDescripcion
   } from "../controllers/categoria.controller.js";
 
 
@@ -15,6 +16,7 @@ router.get('/categories', getCategorias)
 router.get("/categories/:descripcion", getCategoria);
 router.post('/categories', createCategoria)
 router.put('/categories/:id', updateCategoria)
+router.put('/categories/description/:id', updateCategoriaDescripcion)
 
 
 
