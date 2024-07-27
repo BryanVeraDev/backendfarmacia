@@ -8,6 +8,7 @@ import {
     getProductosCount,
     getProductosAsc,
     getProductosDesc,
+    getProductosAlarm,
     getProductosCategory,
     updateProductoPrecio,
     updateProductoIsActive,
@@ -25,6 +26,7 @@ router.get("/products/count", getProductosCount);
 router.get("/products/categories", getProductosCategory);
 router.get("/products/asc", getProductosAsc);
 router.get("/products/desc", getProductosDesc);
+router.get("/products/alarm", getProductosAlarm);
 router.get("/products/search/:name", getProductoName);
 router.post('/products', createProducto)
 router.put('/products/price/:id', updateProductoPrecio)

@@ -98,6 +98,16 @@ export const getProductosDesc = async (req, res) => {
   }
 };
 
+export const getProductosAlarm = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1 AND p.cantidad < 5 ORDER BY p.cantidad DESC");
+    const productos = transformarProductos(rows)
+    res.json(productos)
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
 export const getProductosCategory = async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT c.descripcion as name_categoria, count(p.id_producto) as cantidad FROM categoria c JOIN producto p on p.categoria = c.id_categoria GROUP BY 1");
