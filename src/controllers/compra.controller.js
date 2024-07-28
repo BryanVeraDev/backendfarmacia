@@ -128,13 +128,31 @@ export const createCompra = async (req, res) => {
 export const getComprasFilter = async (req, res) => {
   try {
     const { fecha_inicio, fecha_fin } = req.body;
+    
     const [rows] = await pool.query(
       "SELECT * FROM compra WHERE fecha BETWEEN ? AND ?",
       [fecha_inicio, fecha_fin]
     );
 
-    res.json(rows);
+    const comprasTransformadas = [];
+
+    for (const compra of rows) {
+      const { id_compra } = compra;
+      const [products] = await pool.query(
+        "SELECT cp.id_compra_producto , cp.cantidad_producto, p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, cat.id_categoria, cat.descripcion AS categoria_nombre, cat.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo, c.id_compra, c.nombre_cliente, c.fecha as compra_fecha, c.total as compra_total from compra_producto cp JOIN producto p on p.id_producto = cp.id_producto JOIN compra c on c.id_compra = cp.id_compra JOIN categoria cat on cat.id_categoria = p.categoria JOIN proveedor pr on pr.id_proveedor = p.proveedor WHERE c.id_compra = ? ORDER BY 1 ASC;",
+        [id_compra]
+      );
+
+      const compraTransformada = transformarCompra(compra, products);
+
+      comprasTransformadas.push(compraTransformada);
+
+    }
+
+    res.json(comprasTransformadas);
+
   } catch (error) {
+    console.log(error)
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
