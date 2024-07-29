@@ -76,6 +76,11 @@ export const createCompra = async (req, res) => {
       const cantidadDisponible = productRows[0].cantidad;
       const nombreProducto = productRows[0].nombre;
 
+      console.log(cantidad_producto)
+      console.log(cantidadDisponible)
+      console.log(nombreProducto
+
+      )
       if (cantidad_producto > cantidadDisponible) {
         return res
           .status(400)
