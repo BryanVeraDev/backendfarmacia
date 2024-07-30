@@ -148,7 +148,6 @@ export const getProductSuggestions = async (req, res) => {
       return res.status(404).json({ message: "No products found" });
     }
     res.json(rows);
-    pool.end(function (err) {});
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
