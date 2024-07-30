@@ -12,6 +12,7 @@ import {
     getProductosCategory,
     updateProductoPrecio,
     updateProductoIsActive,
+    getProductSuggestions
   } from "../controllers/producto.controller.js";
 
   import { verifyToken, isAdmin } from "../middlewares/authJwt.js";
@@ -28,6 +29,7 @@ router.get("/products/asc", getProductosAsc);
 router.get("/products/desc", getProductosDesc);
 router.get("/products/alarm", getProductosAlarm);
 router.get("/products/search/:name", getProductoName);
+router.get("/products/suggest/:word", getProductSuggestions);
 router.post('/products', createProducto)
 router.put('/products/price/:id', updateProductoPrecio)
 router.put('/products/isactive/:id', updateProductoIsActive)

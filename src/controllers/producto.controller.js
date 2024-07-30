@@ -117,6 +117,34 @@ export const getProductosCategory = async (req, res) => {
   }
 };
 
+export const getProductSuggestions = async (req, res) => {
+  try {
+    const { word } = req.params; 
+    if (!word) {
+      return res.status(400).json({ message: "Search parameter is missing" });
+    }
+
+    const searchPattern = `%${word}%`;
+    console.log(searchPattern)
+
+    const [rows] = await pool.query(
+      "SELECT nombre, peso FROM producto WHERE (nombre LIKE ? OR id_producto LIKE ?) AND isActive = 1",
+      [searchPattern, searchPattern]
+    );
+
+    console.log(rows)
+
+    if (rows.length <= 0) {
+      return res.status(404).json({ message: "No products found" });
+    }
+    res.json(rows); 
+    pool.end(function (err) {
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong"});
+  }
+};
+
 export const createProducto = async (req, res) => {
   try {
     const { nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive } = req.body;
