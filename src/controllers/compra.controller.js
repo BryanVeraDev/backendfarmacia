@@ -69,7 +69,7 @@ export const createCompra = async (req, res) => {
       const { id_producto, cantidad_producto } = producto;
 
       const [productRows] = await pool.query(
-        "SELECT cantidad, nombre FROM producto WHERE id_producto = ?",
+        "SELECT cantidad, nombre FROM producto WHERE id_producto = ? AND isActive = 1",
         [id_producto]
       );
 
