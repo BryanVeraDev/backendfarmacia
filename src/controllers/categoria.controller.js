@@ -12,7 +12,7 @@ export const getCategorias = async (req, res) => {
 export const getCategoria = async (req, res) => {
   try {
     const { descripcion } = req.params;
-    console.log(descripcion)
+
     const [rows] = await pool.query("SELECT * FROM categoria WHERE descripcion = ?", [
       descripcion,
     ]);
@@ -31,11 +31,12 @@ export const getCategoria = async (req, res) => {
 export const createCategoria = async (req, res) => {
   try {
     const { descripcion } = req.body;
+    const nombreEnMayusculas = descripcion.toUpperCase();
     const [rows] = await pool.query(
       "INSERT INTO categoria (descripcion, isActive) VALUES (?, 1)",
-      [descripcion]
+      [nombreEnMayusculas]
     );   
-    res.status(201).json({ id_categoria: rows.insertId, descripcion, isActive: 1});
+    res.status(201).json({ id_categoria: rows.insertId, descripcion: nombreEnMayusculas, isActive: 1});
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }

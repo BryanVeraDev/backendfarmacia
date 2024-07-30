@@ -30,13 +30,14 @@ export const getProveedor = async (req, res) => {
 export const createProveedor = async (req, res) => {
   try {
     const { nombre, telefono } = req.body;
+    const nombreEnMayusculas = nombre.toUpperCase();
     const [rows] = await pool.query(
       "INSERT INTO proveedor (nombre, telefono, isActive) VALUES (?, ?, 1)",
-      [nombre, telefono]
+      [nombreEnMayusculas, telefono]
     );
     res
       .status(201)
-      .json({ id_proveedor: rows.insertId, nombre, telefono, isActive: 1 });
+      .json({ id_proveedor: rows.insertId, nombre: nombreEnMayusculas, telefono, isActive: 1 });
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }

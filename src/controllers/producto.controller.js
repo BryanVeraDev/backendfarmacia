@@ -172,10 +172,11 @@ export const createProducto = async (req, res) => {
     );
 
     if (rows2.length <= 0) {
+      const nombreEnMayusculas = nombre.toUpperCase();
       const [rows] = await pool.query(
         "INSERT INTO producto (nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         [
-          nombre,
+          nombreEnMayusculas,
           peso,
           precio_unitario,
           cantidad,
@@ -189,7 +190,7 @@ export const createProducto = async (req, res) => {
         .status(201)
         .json({
           id_producto: rows.insertId,
-          nombre,
+          nombre: nombreEnMayusculas,
           peso,
           precio_unitario,
           cantidad,
