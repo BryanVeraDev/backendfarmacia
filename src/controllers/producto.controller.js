@@ -34,7 +34,7 @@ export const getProductos = async (req, res) => {
 export const getProductoId = async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await pool.query("SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.id_producto = ?", [
+    const [rows] = await pool.query("SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.id_producto = ? AND p.isActive = 1", [
       id,
     ]);
 
