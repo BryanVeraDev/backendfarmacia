@@ -121,11 +121,9 @@ export const createProducto = async (req, res) => {
   try {
     const { nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive } = req.body;
 
-    const [rows2] = await pool.query("SELECT * FROM producto p join categoria c on c.id_categoria = p.categoria WHERE nombre = ?", [
-      nombre,
+    const [rows2] = await pool.query("SELECT * FROM producto p join categoria c on c.id_categoria = p.categoria WHERE nombre = ? AND peso = ?", [
+      nombre, peso,
     ]);
-
-    console.log(rows2.length)
     
     if (rows2.length <= 0) {
       const [rows] = await pool.query(
@@ -136,13 +134,14 @@ export const createProducto = async (req, res) => {
 
     }
     else{
+      const new_value = rows2[0].cantidad + cantidad;
       
       await pool.query("UPDATE producto SET cantidad = ? WHERE nombre = ?", [
         new_value,
         nombre,
       ]);
 
-      res.status(201).json({ id_producto: rows2.insertId, nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive });
+      res.status(201).json({ id_producto: rows2.insertId, nombre, peso, precio_unitario, cantidad: new_value, fecha_vencimiento, categoria, proveedor, isActive });
       
     }
   } catch (error) {
