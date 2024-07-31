@@ -12,7 +12,8 @@ import {
     getProductosCategory,
     updateProducto,
     updateProductoIsActive,
-    getProductSuggestions
+    getProductSuggestions,
+    getProductosTodos
   } from "../controllers/producto.controller.js";
 
   import { verifyToken, isAdmin } from "../middlewares/authJwt.js";
@@ -20,7 +21,7 @@ import {
 
 const router = Router()
 
-
+router.get('/productsall', getProductosTodos)
 router.get('/products', getProductos)
 router.get("/products/product/:id", getProductoId);
 router.get("/products/count", getProductosCount);

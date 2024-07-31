@@ -23,6 +23,18 @@ export const transformarProductos = (rows) => {
   }));
 };
 
+export const getProductosTodos = async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT p.id_producto, p.nombre AS producto_nombre, p.peso, p.fecha_vencimiento as producto_fecha, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor;"
+    );
+    const productos = transformarProductos(rows);
+    res.json(productos);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
 export const getProductos = async (req, res) => {
   try {
     const [rows] = await pool.query(
