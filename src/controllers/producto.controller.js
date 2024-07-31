@@ -250,7 +250,8 @@ export const updateProducto = async (req, res) => {
       [id]
     );
 
-    const new_value = rows2[0].cantidad + cantidad;
+    const new_value = parseInt(rows2[0].cantidad) + parseInt(cantidad);
+    console.log(new_value)
 
     const [result] = await pool.query(
       "UPDATE producto SET precio_unitario = IFNULL(?, precio_unitario), cantidad = IFNULL(?, cantidad) WHERE id_producto = ?",
