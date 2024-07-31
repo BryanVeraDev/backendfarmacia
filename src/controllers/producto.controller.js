@@ -4,6 +4,8 @@ export const transformarProductos = (rows) => {
   return rows.map((row) => ({
     id_producto: row.id_producto,
     nombre: row.producto_nombre,
+    peso: row.peso,
+    fecha_vencimiento: row.producto_fecha,
     precio_unitario: row.precio_unitario,
     cantidad: row.cantidad,
     isActive: row.producto_activo,
@@ -24,7 +26,7 @@ export const transformarProductos = (rows) => {
 export const getProductos = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1;"
+      "SELECT p.id_producto, p.nombre AS producto_nombre, p.peso, p.fecha_vencimiento as producto_fecha, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1;"
     );
     const productos = transformarProductos(rows);
     res.json(productos);
@@ -37,7 +39,7 @@ export const getProductoId = async (req, res) => {
   try {
     const { id } = req.params;
     const [rows] = await pool.query(
-      "SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.id_producto = ? AND p.isActive = 1",
+      "SELECT p.id_producto, p.nombre AS producto_nombre, p.peso, p.fecha_vencimiento as producto_fecha, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.id_producto = ? AND p.isActive = 1",
       [id]
     );
 
@@ -56,7 +58,7 @@ export const getProductoName = async (req, res) => {
   try {
     const { name } = req.params;
     const [rows] = await pool.query(
-      "SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.nombre = ? AND p.isActive = 1",
+      "SELECT p.id_producto, p.nombre AS producto_nombre, p.peso, p.fecha_vencimiento as producto_fecha, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.nombre = ? AND p.isActive = 1",
       [name]
     );
 
@@ -85,7 +87,7 @@ export const getProductosCount = async (req, res) => {
 export const getProductosAsc = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1 ORDER BY p.cantidad ASC"
+      "SELECT p.id_producto, p.nombre AS producto_nombre, p.peso, p.fecha_vencimiento as producto_fecha, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1 ORDER BY p.cantidad ASC"
     );
     const productos = transformarProductos(rows);
     res.json(productos);
@@ -97,7 +99,7 @@ export const getProductosAsc = async (req, res) => {
 export const getProductosDesc = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1 ORDER BY p.cantidad DESC"
+      "SELECT p.id_producto, p.nombre AS producto_nombre, p.peso, p.fecha_vencimiento as producto_fecha, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1 ORDER BY p.cantidad DESC"
     );
 
     const productos = transformarProductos(rows);
@@ -110,7 +112,7 @@ export const getProductosDesc = async (req, res) => {
 export const getProductosAlarm = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      "SELECT p.id_producto, p.nombre AS producto_nombre, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1 AND p.cantidad < 5 ORDER BY p.cantidad DESC"
+      "SELECT p.id_producto, p.nombre AS producto_nombre, p.peso, p.fecha_vencimiento as producto_fecha, p.precio_unitario, p.cantidad, p.isActive as producto_activo, c.id_categoria, c.descripcion AS categoria_nombre, c.isActive as categoria_activo, pr.id_proveedor, pr.nombre AS proveedor_nombre, pr.telefono as proveedor_telefono, pr.isActive as proveedor_activo FROM producto p JOIN categoria c ON c.id_categoria = p.categoria JOIN proveedor pr ON pr.id_proveedor = p.proveedor WHERE p.isActive = 1 AND p.cantidad < 5 ORDER BY p.cantidad DESC"
     );
     const productos = transformarProductos(rows);
     res.json(productos);
@@ -226,14 +228,14 @@ export const createProducto = async (req, res) => {
   }
 };
 
-export const updateProductoPrecio = async (req, res) => {
+export const updateProducto = async (req, res) => {
   try {
     const { id } = req.params;
-    const { precio_unitario } = req.body;
+    const { precio_unitario, cantidad } = req.body;
 
     const [result] = await pool.query(
-      "UPDATE producto SET precio_unitario = IFNULL(?, precio_unitario) WHERE id_producto = ?",
-      [precio_unitario, id]
+      "UPDATE producto SET precio_unitario = IFNULL(?, precio_unitario), cantidad = IFNULL(?, cantidad) WHERE id_producto = ?",
+      [precio_unitario, cantidad, id]
     );
 
     if (result.affectedRows === 0)
