@@ -214,7 +214,7 @@ export const createProducto = async (req, res) => {
           isActive,
         });
     } else {
-      const new_value = rows2[0].cantidad + cantidad;
+      const new_value = parseInt(rows2[0].cantidad) + parseInt(cantidad);
 
       await pool.query("UPDATE producto SET cantidad = ? WHERE nombre = ?", [
         new_value,
