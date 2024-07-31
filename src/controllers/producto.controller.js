@@ -233,9 +233,16 @@ export const updateProducto = async (req, res) => {
     const { id } = req.params;
     const { precio_unitario, cantidad } = req.body;
 
+    const [rows2] = await pool.query(
+      "SELECT * FROM producto p join categoria c on c.id_categoria = p.categoria WHERE id_producto = ?",
+      [id]
+    );
+
+    const new_value = rows2[0].cantidad + cantidad;
+
     const [result] = await pool.query(
       "UPDATE producto SET precio_unitario = IFNULL(?, precio_unitario), cantidad = IFNULL(?, cantidad) WHERE id_producto = ?",
-      [precio_unitario, cantidad, id]
+      [precio_unitario, new_value, id]
     );
 
     if (result.affectedRows === 0)
