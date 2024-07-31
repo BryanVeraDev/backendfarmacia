@@ -174,7 +174,6 @@ export const createProducto = async (req, res) => {
       peso,
       precio_unitario,
       cantidad,
-      fecha_vencimiento,
       categoria,
       proveedor,
       isActive,
@@ -188,16 +187,14 @@ export const createProducto = async (req, res) => {
     if (rows2.length <= 0) {
       const nombreEnMayusculas = nombre.toUpperCase();
       const [rows] = await pool.query(
-        "INSERT INTO producto (nombre, peso, precio_unitario, cantidad, fecha_vencimiento, categoria, proveedor, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO producto (nombre, peso, precio_unitario, cantidad, categoria, proveedor, isActive) VALUES (?, ?, ?, ?, ?, ?, 1)",
         [
           nombreEnMayusculas,
           peso,
           precio_unitario,
           cantidad,
-          fecha_vencimiento,
           categoria,
           proveedor,
-          isActive,
         ]
       );
       res
@@ -208,10 +205,9 @@ export const createProducto = async (req, res) => {
           peso,
           precio_unitario,
           cantidad,
-          fecha_vencimiento,
           categoria,
           proveedor,
-          isActive,
+          isActive: 1,
         });
     } else {
       const new_value = parseInt(rows2[0].cantidad) + parseInt(cantidad);
@@ -229,10 +225,9 @@ export const createProducto = async (req, res) => {
           peso,
           precio_unitario,
           cantidad: new_value,
-          fecha_vencimiento,
           categoria,
           proveedor,
-          isActive,
+          isActive: 1,
         });
     }
   } catch (error) {
