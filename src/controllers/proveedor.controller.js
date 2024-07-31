@@ -47,7 +47,14 @@ export const updateProveedorForIsActive = async (req, res) => {
   try {
     const { id_proveedor } = req.params;
     const { isActive } = req.body;
-    console.log(id_proveedor)
+
+    const [valida] = await pool.query("SELECT * FROM producto p JOIN proveedor pr on pr.id_proveedor = p.proveedor WHERE p.proveedor = ?", [
+      id_proveedor,
+    ]);
+
+    if (valida.length > 0) {
+      return res.status(404).json({ message: "Provider has products" });
+    }
 
     const [result] = await pool.query(
       "UPDATE proveedor SET isActive = ? WHERE id_proveedor = ?",

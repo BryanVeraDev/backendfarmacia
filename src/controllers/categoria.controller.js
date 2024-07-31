@@ -47,6 +47,14 @@ export const updateCategoria = async (req, res) => {
     const { id } = req.params;
     const { isActive } = req.body;
 
+    const [valida] = await pool.query("SELECT * FROM producto p JOIN categoria c on c.id_categoria = p.categoria WHERE p.categoria = ?", [
+      id,
+    ]);
+
+    if (valida.length > 0) {
+      return res.status(404).json({ message: "Category has products" });
+    }
+
     const [result] = await pool.query(
       "UPDATE categoria SET isActive = ? WHERE id_categoria = ?",
       [isActive, id]
